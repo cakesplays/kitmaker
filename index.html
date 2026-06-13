@@ -6,21 +6,38 @@
     <title>Custom Kit Generator</title>
     <style>
         body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; text-align: center; }
-        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 20px; border-radius: 8px; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box;}
-        input[type="checkbox"] { width: auto; }
-        button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 10px; }
+        h2 { margin-bottom: 25px; }
+        .container { max-width: 900px; margin: 0 auto; background: #1e1e1e; padding: 25px; border-radius: 8px; }
+        
+        /* Two-Column Creator Layout */
+        .creator-layout { display: flex; gap: 20px; text-align: left; margin-bottom: 20px; }
+        .column-advanced { flex: 1; background: #161616; padding: 15px; border-radius: 6px; border: 1px dashed #333; }
+        .column-main { flex: 1.5; background: #1a1a1a; padding: 15px; border-radius: 6px; }
+        
+        .section-title { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #007bff; margin-top: 0; margin-bottom: 15px; font-weight: bold; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        input[type="checkbox"] { width: auto; margin-right: 5px; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
+        .checkbox-group label { font-weight: normal; cursor: pointer; }
+        
+        button { background: #007bff; color: white; border: none; padding: 12px 15px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
         button:hover { background: #0056b3; }
         .btn-danger { background: #dc3545; }
         .btn-danger:hover { background: #bd2130; }
-        .btn-success { background: #28a745; display: none; width: 100%; font-size: 16px; margin-top: 10px; }
+        .btn-success { background: #28a745; display: none; width: 100%; font-size: 16px; margin-top: 15px; padding: 12px; }
         .btn-success:hover { background: #218838; }
-        #result { margin-top: 20px; display: none; }
-        #result img { max-width: 100%; border: 2px solid #333; border-radius: 4px; }
-        .button-group { display: flex; gap: 10px; }
+        
+        .button-group { display: flex; gap: 10px; width: 100%; margin-top: 10px; }
         .button-group button { flex: 1; }
+        
+        #result { margin-top: 25px; display: none; background: #161616; padding: 20px; border-radius: 6px; }
+        #result img { max-width: 100%; max-height: 500px; border: 2px solid #333; border-radius: 4px; display: block; margin: 0 auto 15px auto; }
+        
+        @media (max-width: 768px) {
+            .creator-layout { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -28,46 +45,76 @@
 <div class="container">
     <h2>Football Kit Creator</h2>
     <form id="kitForm">
-        <div class="form-group">
-            <label>Template Image</label>
-            <input type="file" id="template" accept="image/*" required>
-        </div>
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" id="name" required placeholder="e.g. RONALDO">
-        </div>
-        <div class="form-group">
-            <label>Number</label>
-            <input type="text" id="number" required placeholder="e.g. 7">
-        </div>
-        <div class="form-group">
-            <label>Hex Color Code</label>
-            <input type="text" id="color" value="#ffffff" placeholder="e.g. #ffffff">
-        </div>
-        <div class="form-group">
-            <label><input type="checkbox" id="ss_left"> SS Left Arm</label>
-            <label><input type="checkbox" id="ss_right"> SS Right Arm</label>
-            <label><input type="checkbox" id="cc"> Remove Credits</label>
-        </div>
-        <div class="form-group">
-            <label>Left Arm Accessory</label>
-            <select id="acc_left">
-                <option value="">None</option>
-                <option value="glove_no_holes">Glove (No Holes)</option>
-                <option value="glove_holes">Glove (With Holes)</option>
-                <option value="band">Wristband</option>
-                <option value="undershirt">Undershirt</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Right Arm Accessory</label>
-            <select id="acc_right">
-                <option value="">None</option>
-                <option value="glove_no_holes">Glove (No Holes)</option>
-                <option value="glove_holes">Glove (With Holes)</option>
-                <option value="band">Wristband</option>
-                <option value="undershirt">Undershirt</option>
-            </select>
+        <div class="creator-layout">
+            
+            <div class="column-advanced">
+                <p class="section-title">⚙️ Advanced Settings</p>
+                <div class="form-group">
+                    <label>Name Size</label>
+                    <input type="number" id="name_size" value="20" min="5" max="200">
+                </div>
+                <div class="form-group">
+                    <label>Name Y Position</label>
+                    <input type="number" id="name_y" value="95" min="0" max="2000">
+                </div>
+                <div class="form-group">
+                    <label>Number Size</label>
+                    <input type="number" id="number_size" value="65" min="5" max="500">
+                </div>
+                <div class="form-group">
+                    <label>Number Y Position</label>
+                    <input type="number" id="number_y" value="130" min="0" max="2000">
+                </div>
+            </div>
+            
+            <div class="column-main">
+                <p class="section-title">👕 Kit Configuration</p>
+                <div class="form-group">
+                    <label>Template Image</label>
+                    <input type="file" id="template" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="name" required placeholder="e.g. RONALDO">
+                </div>
+                <div class="form-group">
+                    <label>Number</label>
+                    <input type="text" id="number" required placeholder="e.g. 7">
+                </div>
+                <div class="form-group">
+                    <label>Hex Color Code</label>
+                    <input type="text" id="color" value="#ffffff" placeholder="e.g. #ffffff">
+                </div>
+                <div class="form-group">
+                    <label>Left Arm Accessory</label>
+                    <select id="acc_left">
+                        <option value="">None</option>
+                        <option value="glove_no_holes">Glove (No Holes)</option>
+                        <option value="glove_holes">Glove (With Holes)</option>
+                        <option value="band">Wristband</option>
+                        <option value="undershirt">Undershirt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Right Arm Accessory</label>
+                    <select id="acc_right">
+                        <option value="">None</option>
+                        <option value="glove_no_holes">Glove (No Holes)</option>
+                        <option value="glove_holes">Glove (With Holes)</option>
+                        <option value="band">Wristband</option>
+                        <option value="undershirt">Undershirt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Modifications</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="ss_left"> SS Left Arm</label>
+                        <label><input type="checkbox" id="ss_right"> SS Right Arm</label>
+                        <label><input type="checkbox" id="cc"> Remove Credits</label>
+                    </div>
+                </div>
+            </div>
+            
         </div>
         
         <div class="button-group">
@@ -100,6 +147,12 @@
         formData.append('acc_left', document.getElementById('acc_left').value);
         formData.append('acc_right', document.getElementById('acc_right').value);
         formData.append('cc', document.getElementById('cc').checked);
+        
+        // Mapped to your Python app variables
+        formData.append('name_size', document.getElementById('name_size').value);
+        formData.append('name_y', document.getElementById('name_y').value);
+        formData.append('number_size', document.getElementById('number_size').value);
+        formData.append('number_y', document.getElementById('number_y').value);
 
         try {
             const response = await fetch(`${BACKEND_URL}/generate-kit`, {
@@ -111,7 +164,6 @@
 
             const blob = await response.blob();
             
-            // Clean up old object URL memory if creating multiple kits back-to-back
             if (currentImageBlobUrl) {
                 URL.revokeObjectURL(currentImageBlobUrl);
             }
@@ -126,12 +178,11 @@
         }
     });
 
-    // Download Feature: Uses player name field to title the download
     document.getElementById('downloadBtn').addEventListener('click', () => {
         if (!currentImageBlobUrl) return;
         
         const playerName = document.getElementById('name').value.trim() || "kit";
-        const cleanName = playerName.toLowerCase().replace(/[^a-z0-9]/gi, '_'); // Sanitizes spaces/special chars
+        const cleanName = playerName.toLowerCase().replace(/[^a-z0-9]/gi, '_');
         
         const link = document.createElement('a');
         link.href = currentImageBlobUrl;
@@ -141,7 +192,6 @@
         document.body.removeChild(link);
     });
 
-    // Reset/Clear Feature: Restores the page layout completely
     document.getElementById('clearBtn').addEventListener('click', () => {
         document.getElementById('kitForm').reset();
         document.getElementById('result').style.display = 'none';
