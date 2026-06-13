@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Kit Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; text-align: center; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 20px; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box;}
+        input[type="checkbox"] { width: auto; }
+        button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        #result { margin-top: 20px; display: none; }
+        #result img { max-width: 100%; border: 2px solid #333; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Football Kit Creator</h2>
+    <form id="kitForm">
+        <div class="form-group">
+            <label>Template Image</label>
+            <input type="file" id="template" accept="image/*" required>
+        </div>
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="name" required placeholder="e.g. RONALDO">
+        </div>
+        <div class="form-group">
+            <label>Number</label>
+            <input type="text" id="number" required placeholder="e.g. 7">
+        </div>
+        <div class="form-group">
+            <label>Hex Color Code</label>
+            <input type="text" id="color" value="#ffffff" placeholder="e.g. #ffffff">
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" id="ss_left"> SS Left Arm</label>
+            <label><input type="checkbox" id="ss_right"> SS Right Arm</label>
+            <label><input type="checkbox" id="cc"> Remove Credits</label>
+        </div>
+        <div class="form-group">
+            <label>Left Arm Accessory</label>
+            <select id="acc_left">
+                <option value="">None</option>
+                <option value="glove_no_holes">Glove (No Holes)</option>
+                <option value="glove_holes">Glove (With Holes)</option>
+                <option value="band">Wristband</option>
+                <option value="undershirt">Undershirt</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Right Arm Accessory</label>
+            <select id="acc_right">
+                <option value="">None</option>
+                <option value="glove_no_holes">Glove (No Holes)</option>
+                <option value="glove_holes">Glove (With Holes)</option>
+                <option value="band">Wristband</option>
+                <option value="undershirt">Undershirt</option>
+            </select>
+        </div>
+        <button type="submit">Generate Kit</button>
+    </form>
+
+    <div id="result">
+        <h3>Your Generated Kit:</h3>
+        <img id="kitImage" src="" alt="Generated Kit">
+    </div>
+</div>
+
+<script>
+    const BACKEND_URL = "https://cakemakebakekit-kitmaker.hf.space";
+
+    document.getElementById('kitForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('template', document.getElementById('template').files[0]);
+        formData.append('name', document.getElementById('name').value);
+        formData.append('number', document.getElementById('number').value);
+        formData.append('color', document.getElementById('color').value);
+        formData.append('ss_left', document.getElementById('ss_left').checked);
+        formData.append('ss_right', document.getElementById('ss_right').checked);
+        formData.append('acc_left', document.getElementById('acc_left').value);
+        formData.append('acc_right', document.getElementById('acc_right').value);
+        formData.append('cc', document.getElementById('cc').checked);
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/generate-kit`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) throw new Error("Generation failed");
+
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            
+            document.getElementById('kitImage').src = imageUrl;
+            document.getElementById('result').style.display = 'block';
+        } catch (error) {
+            alert("Error generating kit: " + error.message);
+        }
+    });
+</script>
+</body>
+</html>
