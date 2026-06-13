@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cake Mps Kit Generator</title>
+    <title>Cake Kit Maker</title>
     <style>
         body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; text-align: center; }
         h2 { margin-bottom: 25px; }
         .container { max-width: 900px; margin: 0 auto; background: #1e1e1e; padding: 25px; border-radius: 8px; }
         
-        /* Two-Column Creator Layout */
         .creator-layout { display: flex; gap: 20px; text-align: left; margin-bottom: 20px; }
         .column-advanced { flex: 1; background: #161616; padding: 15px; border-radius: 6px; border: 1px dashed #333; }
         .column-main { flex: 1.5; background: #1a1a1a; padding: 15px; border-radius: 6px; }
@@ -43,7 +42,7 @@
 <body>
 
 <div class="container">
-    <h2>Mps Kit Creator</h2>
+    <h2>Mps Kit Maker</h2>
     <form id="kitForm">
         <div class="creator-layout">
             
@@ -75,7 +74,7 @@
                 </div>
                 <div class="form-group">
                     <label>Name</label>
-                    <input type="text" id="name" required placeholder="e.g cake">
+                    <input type="text" id="name" required placeholder="e.g CAKE">
                 </div>
                 <div class="form-group">
                     <label>Number</label>
@@ -130,6 +129,7 @@
 </div>
 
 <script>
+    // Make sure this matches your exact Hugging Face Direct URL with https://
     const BACKEND_URL = "https://cakemakebakekit-kitmaker.hf.space";
     let currentImageBlobUrl = null;
 
@@ -145,9 +145,7 @@
         formData.append('ss_right', document.getElementById('ss_right').checked);
         formData.append('acc_left', document.getElementById('acc_left').value);
         formData.append('acc_right', document.getElementById('acc_right').value);
-        formData.append('cc', document.getElementById('cc').checked);
         
-        // Mapped to your Python app variables
         formData.append('name_size', document.getElementById('name_size').value);
         formData.append('name_y', document.getElementById('name_y').value);
         formData.append('number_size', document.getElementById('number_size').value);
@@ -159,7 +157,10 @@
                 body: formData
             });
 
-            if (!response.ok) throw new Error("Generation failed");
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.detail || "Backend error generating kit");
+            }
 
             const blob = await response.blob();
             
@@ -173,7 +174,7 @@
             document.getElementById('result').style.display = 'block';
             document.getElementById('downloadBtn').style.display = 'block';
         } catch (error) {
-            alert("Error generating kit: " + error.message);
+            alert("Error: " + error.message);
         }
     });
 
